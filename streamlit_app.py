@@ -143,7 +143,7 @@ if 'generated_log' in st.session_state:
     
     # Simple direct file downloader button interaction mapping
     st.download_button(
-        label="📥 Download Lesson Log (.docx File)",
+        label="📥 Download Lesson Log (.docx Word File)",
         data=st.session_state['generated_log'],
         file_name=f"5_Day_Lesson_Log_{subject.replace(' ', '_')}_{grade_level.replace(' ', '_')}.txt",
         mime="text/plain"
