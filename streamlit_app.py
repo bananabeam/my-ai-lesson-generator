@@ -1,5 +1,26 @@
 import streamlit as st
 from google import genai
+from docx import Document
+from io import BytesIO
+
+# Helper function to convert AI Markdown text into a clean Word Document (.docx)
+def convert_to_docx(text):
+    doc = Document()
+    # Add a styled document header
+    doc.add_heading("AI 5-Day Weekly Lesson Log", level=0)
+    
+    # Clean up markdown formatting characters before putting them in Word
+    clean_text = text.replace("###", "").replace("##", "").replace("#", "").replace("**", "")
+    
+    for line in clean_text.split('\n'):
+        if line.strip().startswith(('I.', 'II.', 'III.', 'IV.', 'V.', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5')):
+            doc.add_heading(line.strip(), level=1)
+        else:
+            doc.add_paragraph(line)
+            
+    bio = BytesIO()
+    doc.save(bio)
+    return bio.getvalue()
 
 # 1. Wide Page Layout configuration to fit long text comfortably
 st.set_page_config(page_title="AI 5-Day Lesson Log Generator", layout="wide")
@@ -125,7 +146,7 @@ if st.button("Generate 5-Day Weekly Lesson Log", type="primary"):
                     contents=prompt,
                 )
                 
-                # Store the result text in a session state variable to persistent data rendering
+                # Store the result text in a session state variable
                 st.session_state['generated_log'] = response.text
                 st.success("5-Day Lesson Log Successfully Generated!")
                 
@@ -141,11 +162,14 @@ if 'generated_log' in st.session_state:
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Simple direct file downloader button interaction mapping
+    # Convert text to binary MS Word file format
+    docx_data = convert_to_docx(st.session_state['generated_log'])
+    
+    # Download button mapped to a real Word Document format (.docx)
     st.download_button(
         label="📥 Download Lesson Log (.docx Word File)",
-        data=st.session_state['generated_log'],
-        file_name=f"5_Day_Lesson_Log_{subject.replace(' ', '_')}_{grade_level.replace(' ', '_')}.txt",
-        mime="text/plain"
+        data=docx_data,
+        file_name=f"5_Day_Lesson_Log_{subject.replace(' ', '_')}_{grade_level.replace(' ', '_')}.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
     st.markdown('</div>', unsafe_allow_html=True)
