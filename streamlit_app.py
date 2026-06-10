@@ -102,7 +102,7 @@ st.markdown('<h1 class="title-text">AI 5-Days Lesson Log Generator</h1>', unsafe
 st.markdown('<p class="subtitle-text">K-12 & SHS 5-Days Weekly Lesson Log</p>', unsafe_allow_html=True)
 st.markdown('<p class="developer-text">Developed by: <a class="developer-link" href="#">Adonis T. Reyes</a></p>', unsafe_allow_html=True)
 
-st.markdown('<p class="intro-text">Instantly create a detailed weekly lesson plan spanning 5 Dayss. You can input your specific Standards/Competency, or leave them blank and let the AI generate them based on the Subject and Grade.</p>', unsafe_allow_html=True)
+st.markdown('<p class="intro-text">Instantly create a detailed weekly lesson plan spanning 5 Days. You can input your specific Standards/Competency, or leave them blank and let the AI generate them based on the Subject and Grade.</p>', unsafe_allow_html=True)
 
 # 3. Main Data Row (3 Columns)
 col1, col2, col3 = st.columns([1, 1, 1.2])
@@ -162,7 +162,7 @@ if st.button("Generate 5-Days Weekly Lesson Log", type="primary"):
                 - Performance Standard: {performance_standard if performance_standard else 'Develop a standard DepEd-aligned performance standard.'}
                 - Learning Competency / Code: {learning_competency if learning_competency else 'Provide appropriate learning competency codes.'}
                 
-                Please generate the output beautifully using Markdown headers. Keep the structure organized by dividing the workflow across 5 Dayss (Days 1, Days 2, Days 3, Days 4, Days 5).
+                Please generate the output beautifully using Markdown headers. Keep the structure organized by dividing the workflow across 5 Days (Days 1, Days 2, Days 3, Days 4, Days 5).
                 
                 For each Days, explicitly detail:
                 1. Daily Objective (Derived from the core standards)
