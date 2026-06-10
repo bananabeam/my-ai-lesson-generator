@@ -1,44 +1,55 @@
 import streamlit as st
 from google import genai
 
-# Helper function to convert AI Markdown text into a clean Word-readable HTML format
-def convert_to_html_docx(text):
-    # This wraps the generated text into standard HTML that MS Word reads perfectly
+# Helper function to convert AI Markdown text into an error-free Word-compatible Document template
+def convert_to_clean_doc(text):
+    # Creating a structured layout format that opens flawlessly in Microsoft Word
     html_content = f"""
+    <!DOCTYPE html>
     <html>
     <head>
         <meta charset="utf-8">
+        <title>5-Day Weekly Lesson Log</title>
         <style>
-            body {{ font-family: 'Arial', sans-serif; line-height: 1.6; color: #333333; }}
-            h1 {{ color: #1a73e8; font-size: 24px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }}
-            h2 {{ color: #b06000; font-size: 18px; margin-top: 20px; }}
-            p {{ font-size: 14px; margin-bottom: 10px; }}
-            ul {{ margin-top: 5px; margin-bottom: 5px; }}
+            body {{ font-family: 'Arial', sans-serif; line-height: 1.6; color: #000000; padding: 20px; }}
+            h1 {{ color: #1a73e8; font-size: 22pt; border-bottom: 2px solid #1a73e8; padding-bottom: 5px; margin-top: 20px; }}
+            h2 {{ color: #b06000; font-size: 16pt; margin-top: 18px; border-bottom: 1px solid #eeeeee; padding-bottom: 3px; }}
+            h3 {{ color: #333333; font-size: 13pt; margin-top: 14px; }}
+            p {{ font-size: 11pt; margin-bottom: 8px; text-align: justify; }}
+            ul, ol {{ margin-top: 5px; margin-bottom: 10px; padding-left: 20px; }}
+            li {{ font-size: 11pt; margin-bottom: 4px; }}
+            .header-table {{ width: 100%; border-collapse: collapse; margin-bottom: 20px; }}
+            .header-table td {{ border: 1px solid #dddddd; padding: 8px; font-size: 11pt; }}
         </style>
     </head>
     <body>
-        <h1>AI 5-Day Weekly Lesson Log</h1>
+        <h2 style="text-align: center; color: #1a73e8;">5-DAY WEEKLY LESSON LOG</h2>
+        <p style="text-align: center; font-style: italic;">Generated via AI Lesson Log Generator</p>
+        <br>
     """
     
-    # Process each line and format basic Markdown tags into HTML elements
+    # Process each line and format basic Markdown tags into strict, universally accepted elements
     for line in text.split('\n'):
         line_str = line.strip()
         if not line_str:
-            html_content += "<br>"
             continue
         
-        # Format headings
+        # Format headings safely
         if line_str.startswith("###"):
-            html_content += f"<h2>{line_str.replace('###', '').strip()}</h2>"
-        elif line_str.startswith("##") or line_str.startswith("#"):
-            html_content += f"<h1>{line_str.replace('##', '').replace('#', '').strip()}</h1>"
-        # Format lists
-        elif line_str.startswith("-") or line_str.startswith("*"):
-            html_content += f"<li>{line_str[1:].strip()}</li>"
+            html_content += f"<h3>{line_str.replace('###', '').strip()}</h3>"
+        elif line_str.startswith("##"):
+            html_content += f"<h2>{line_str.replace('##', '').strip()}</h2>"
+        elif line_str.startswith("#"):
+            html_content += f"<h1>{line_str.replace('#', '').strip()}</h1>"
+        # Format lists safely
+        elif line_str.startswith("- ") or line_str.startswith("* "):
+            html_content += f"<li>{line_str[2:].strip()}</li>"
         else:
-            # Handle clean bold formatting replacements
-            bold_fixed = line_str.replace("**", "<b>", 1).replace("**", "</b>", 1)
-            html_content += f"<p>{bold_fixed}</p>"
+            # Handle clean bold formatting replacements natively
+            processed_line = line_str
+            while "**" in processed_line:
+                processed_line = processed_line.replace("**", "<b>", 1).replace("**", "</b>", 1)
+            html_content += f"<p>{processed_line}</p>"
             
     html_content += "</body></html>"
     return html_content
@@ -183,14 +194,14 @@ if 'generated_log' in st.session_state:
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Generate clean Document data 
-    docx_html_data = convert_to_html_docx(st.session_state['generated_log'])
+    # Generate clean standard document template
+    clean_doc_data = convert_to_clean_doc(st.session_state['generated_log'])
     
-    # Download button mapped to deliver the file with a native .docx extension
+    # Safely download as a structured Document file format 
     st.download_button(
-        label="📥 Download Lesson Log (.docx Word File)",
-        data=docx_html_data,
-        file_name=f"5_Day_Lesson_Log_{subject.replace(' ', '_')}_{grade_level.replace(' ', '_')}.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        label="📥 Download Lesson Log (Open directly in Word)",
+        data=clean_doc_data,
+        file_name=f"5_Day_Lesson_Log_{subject.replace(' ', '_')}_{grade_level.replace(' ', '_')}.doc",
+        mime="application/msword"
     )
     st.markdown('</div>', unsafe_allow_html=True)
