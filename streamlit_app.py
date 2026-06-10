@@ -1,26 +1,47 @@
 import streamlit as st
 from google import genai
-from docx import Document
-from io import BytesIO
 
-# Helper function to convert AI Markdown text into a clean Word Document (.docx)
-def convert_to_docx(text):
-    doc = Document()
-    # Add a styled document header
-    doc.add_heading("AI 5-Day Weekly Lesson Log", level=0)
+# Helper function to convert AI Markdown text into a clean Word-readable HTML format
+def convert_to_html_docx(text):
+    # This wraps the generated text into standard HTML that MS Word reads perfectly
+    html_content = f"""
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            body {{ font-family: 'Arial', sans-serif; line-height: 1.6; color: #333333; }}
+            h1 {{ color: #1a73e8; font-size: 24px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }}
+            h2 {{ color: #b06000; font-size: 18px; margin-top: 20px; }}
+            p {{ font-size: 14px; margin-bottom: 10px; }}
+            ul {{ margin-top: 5px; margin-bottom: 5px; }}
+        </style>
+    </head>
+    <body>
+        <h1>AI 5-Day Weekly Lesson Log</h1>
+    """
     
-    # Clean up markdown formatting characters before putting them in Word
-    clean_text = text.replace("###", "").replace("##", "").replace("#", "").replace("**", "")
-    
-    for line in clean_text.split('\n'):
-        if line.strip().startswith(('I.', 'II.', 'III.', 'IV.', 'V.', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5')):
-            doc.add_heading(line.strip(), level=1)
+    # Process each line and format basic Markdown tags into HTML elements
+    for line in text.split('\n'):
+        line_str = line.strip()
+        if not line_str:
+            html_content += "<br>"
+            continue
+        
+        # Format headings
+        if line_str.startswith("###"):
+            html_content += f"<h2>{line_str.replace('###', '').strip()}</h2>"
+        elif line_str.startswith("##") or line_str.startswith("#"):
+            html_content += f"<h1>{line_str.replace('##', '').replace('#', '').strip()}</h1>"
+        # Format lists
+        elif line_str.startswith("-") or line_str.startswith("*"):
+            html_content += f"<li>{line_str[1:].strip()}</li>"
         else:
-            doc.add_paragraph(line)
+            # Handle clean bold formatting replacements
+            bold_fixed = line_str.replace("**", "<b>", 1).replace("**", "</b>", 1)
+            html_content += f"<p>{bold_fixed}</p>"
             
-    bio = BytesIO()
-    doc.save(bio)
-    return bio.getvalue()
+    html_content += "</body></html>"
+    return html_content
 
 # 1. Wide Page Layout configuration to fit long text comfortably
 st.set_page_config(page_title="AI 5-Day Lesson Log Generator", layout="wide")
@@ -162,13 +183,13 @@ if 'generated_log' in st.session_state:
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Convert text to binary MS Word file format
-    docx_data = convert_to_docx(st.session_state['generated_log'])
+    # Generate clean Document data 
+    docx_html_data = convert_to_html_docx(st.session_state['generated_log'])
     
-    # Download button mapped to a real Word Document format (.docx)
+    # Download button mapped to deliver the file with a native .docx extension
     st.download_button(
         label="📥 Download Lesson Log (.docx Word File)",
-        data=docx_data,
+        data=docx_html_data,
         file_name=f"5_Day_Lesson_Log_{subject.replace(' ', '_')}_{grade_level.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
