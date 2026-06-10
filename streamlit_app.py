@@ -99,7 +99,7 @@ st.markdown('<div class="lesson-card">', unsafe_allow_html=True)
 
 # 2. Header Elements
 st.markdown('<h1 class="title-text">AI 5-Days Lesson Log Generator</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle-text">K-12 & SHS 5-Dayss Weekly Lesson Log</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle-text">K-12 & SHS 5-Days Weekly Lesson Log</p>', unsafe_allow_html=True)
 st.markdown('<p class="developer-text">Developed by: <a class="developer-link" href="#">Adonis T. Reyes</a></p>', unsafe_allow_html=True)
 
 st.markdown('<p class="intro-text">Instantly create a detailed weekly lesson plan spanning 5 Dayss. You can input your specific Standards/Competency, or leave them blank and let the AI generate them based on the Subject and Grade.</p>', unsafe_allow_html=True)
