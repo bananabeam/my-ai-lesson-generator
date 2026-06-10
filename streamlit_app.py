@@ -16,7 +16,7 @@ st.markdown("""
 # 2. Header Elements
 st.markdown('<h1 class="title-text">AI Daily Lesson Log Generator</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle-text">K-12 & SHS One Day Lesson Log</p>', unsafe_allow_html=True)
-st.markdown('<p class="credit">Inspired by Reymond P. Samoranos</p>', unsafe_allow_html=True)
+st.markdown('<p class="credit">Inspired by Adonis T. Reyes</p>', unsafe_allow_html=True)
 
 st.info("Instantly create a detailed single-day lesson plan. You can input your specific Standards/Competency, or leave them blank and let the AI generate them based on the Subject and Grade.")
 
